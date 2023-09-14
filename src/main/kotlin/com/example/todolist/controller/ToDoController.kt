@@ -33,9 +33,9 @@ class ToDoController(private val listService:ListService , private val toDoServi
     @PatchMapping("/{id}")
     fun updateList(@PathVariable id:String, @RequestBody list:List):ResponseEntity<List> = listService.updateList(id,list)
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteList(@PathVariable id:String):ResponseEntity<Unit> = listService.deleteList(id)
+    fun deleteList(@RequestParam(required = false) id:String?):ResponseEntity<Unit> = listService.deleteList(id)
 
     @GetMapping("{listId}/items/{id}")
     fun returnToDos(@PathVariable listId:String , @PathVariable(required = false) id: String?) : ResponseEntity<kotlin.collections.List<ToDo>> = toDoService.getToDos(listId,id)

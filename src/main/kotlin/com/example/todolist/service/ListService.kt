@@ -12,5 +12,5 @@ class ListService(private val dataSource: ListDataSource) {
     fun getList(id:String): ResponseEntity<List> = dataSource.getList(id)
     fun addList(list : List): ResponseEntity<List> = dataSource.addList(list) // change later
     fun updateList(id:String,list: List): ResponseEntity<List> = dataSource.updateList(id,list)
-    fun deleteList(id:String):ResponseEntity<Unit> = dataSource.deleteList(id)
+    fun deleteList(id:String?):ResponseEntity<Unit> = dataSource.deleteList(id)
 }

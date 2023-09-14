@@ -33,9 +33,10 @@ class ListDataSourceDB (private val listRepository:ListRepo, private val toDoRep
         if (this.listRepository.existsById(list.id)) {
             throw IllegalArgumentException("List with ID ${list.id} already exists.")
         }
-        val lists = getLists("order")
-        if (lists.body != null){
-            val order = lists.body!!.last().order
+
+        val listBody = this.listRepository.findAll(Sort.by(Sort.Order.asc("order"))).lastOrNull()
+        if (listBody != null){
+            val order = listBody.order
             list.order = order+1
         }
         else{
@@ -116,9 +117,14 @@ class ListDataSourceDB (private val listRepository:ListRepo, private val toDoRep
         return ResponseEntity.ok(this.listRepository.save(oldList))
     }
 
-    override fun deleteList(id: String) : ResponseEntity<Unit> {
-        this.listRepository.findById(id).orElse(null)
-                ?: throw NoSuchElementException("No list with id number: (${id} to be deleted!)")
-        return  ResponseEntity.ok(this.listRepository.deleteById(id))
+    override fun deleteList(id: String?) : ResponseEntity<Unit> {
+        return if (id != null){
+            this.listRepository.findById(id).orElse(null)
+                    ?: throw NoSuchElementException("No list with id number: (${id} to be deleted!)")
+            ResponseEntity.ok(this.listRepository.deleteById(id))
+        }
+        else{
+            return ResponseEntity.ok(this.listRepository.deleteAll())
+        }
     }
 }
