@@ -21,13 +21,7 @@ class ToDoController(private val listService:ListService , private val toDoServi
             ResponseEntity(e.message,HttpStatus.BAD_REQUEST)
 
     @GetMapping
-    fun returnToDoLists() : ResponseEntity<kotlin.collections.List<List>> = listService.getLists()
-
-    @GetMapping("/order")
-    fun returnToDoListsOrder() : ResponseEntity<kotlin.collections.List<List>> = listService.getListsOrder()
-
-    @GetMapping("/delivery")
-    fun returnToDoListsDelivery() : ResponseEntity<kotlin.collections.List<List>> = listService.getListsDelivery()
+    fun returnToDoLists(@RequestParam(required = false)sort : String?) : ResponseEntity<kotlin.collections.List<List>> = listService.getLists(sort)
 
     @GetMapping("/{id}")
     fun returnOneList(@PathVariable id : String) : ResponseEntity<List> = listService.getList(id)
@@ -36,23 +30,23 @@ class ToDoController(private val listService:ListService , private val toDoServi
     @ResponseStatus(HttpStatus.CREATED)
     fun addList(@RequestBody list:List):ResponseEntity<List> = listService.addList(list) // change later
 
-    @PatchMapping
-    fun updateList(@RequestBody list:List):ResponseEntity<List> = listService.updateList(list)
+    @PatchMapping("/{id}")
+    fun updateList(@PathVariable id:String, @RequestBody list:List):ResponseEntity<List> = listService.updateList(id,list)
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteList(@PathVariable id:String):ResponseEntity<Unit> = listService.deleteList(id)
 
-    @GetMapping("/items/{listId}")
-    fun returnToDos(@PathVariable listId:String) : ResponseEntity<kotlin.collections.List<ToDo>> = toDoService.getToDos(listId)
+    @GetMapping("{listId}/items/{id}")
+    fun returnToDos(@PathVariable listId:String , @PathVariable(required = false) id: String?) : ResponseEntity<kotlin.collections.List<ToDo>> = toDoService.getToDos(listId,id)
 
-    @PostMapping("/items")
+    @PostMapping("{listId}/items")
     @ResponseStatus(HttpStatus.CREATED)
-    fun addToDo(@RequestBody toDo: ToDo): ResponseEntity<List> = toDoService.addToDo(toDo) // change later
+    fun addToDo(@PathVariable listId: String,@RequestBody toDo: ToDo): ResponseEntity<List> = toDoService.addToDo(listId,toDo) // change later
 
-    @PatchMapping("/items")
-    fun updateToDo(@RequestBody toDo:ToDo): ResponseEntity<List> = toDoService.updateToDo(toDo)
+    @PatchMapping("{listId}/items/{id}")
+    fun updateToDo(@RequestBody toDo:ToDo,@PathVariable listId: String , @PathVariable(required = false) id: String?): ResponseEntity<List> = toDoService.updateToDo(toDo,listId,id)
 
-    @DeleteMapping("/items/{id}")
-    fun deleteToDo(@PathVariable listId: String,id:String): ResponseEntity<List> = toDoService.deleteToDo(listId,id)
+    @DeleteMapping("{listId}/items/{id}")
+    fun deleteToDo(@PathVariable listId: String,@PathVariable(required = false) id:String?): ResponseEntity<List> = toDoService.deleteToDo(listId,id)
 }

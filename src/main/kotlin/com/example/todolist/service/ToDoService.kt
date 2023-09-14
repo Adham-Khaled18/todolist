@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service
 
 @Service
 class ToDoService(private val dataSource: ListDataSource) {
-    fun getToDos(listId:String): ResponseEntity<List<ToDo>> = dataSource.getToDos(listId)
-    fun addToDo(toDo : ToDo): ResponseEntity<com.example.todolist.model.List> = dataSource.addToDo(toDo) // change later
-    fun updateToDo(toDo: ToDo): ResponseEntity<com.example.todolist.model.List> = dataSource.updateToDo(toDo)
-    fun deleteToDo(listId:String,id:String): ResponseEntity<com.example.todolist.model.List> = dataSource.deleteToDo(listId,id)
+    fun getToDos(listId:String,id:String?): ResponseEntity<List<ToDo>> = dataSource.getToDos(listId,id)
+    fun addToDo(listId:String,toDo : ToDo): ResponseEntity<com.example.todolist.model.List> = dataSource.addToDo(listId,toDo) // change later
+    fun updateToDo(toDo: ToDo,listId: String,id: String?): ResponseEntity<com.example.todolist.model.List> = dataSource.updateToDo(toDo,listId,id)
+    fun deleteToDo(listId:String,id:String?): ResponseEntity<com.example.todolist.model.List> = dataSource.deleteToDo(listId,id)
 }
